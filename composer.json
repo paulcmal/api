@@ -1,7 +1,5 @@
 {
-    "require": {
-        "nikic/fast-route": "^1.3"
-    },
+	"name": "cmal/api",
 
     "autoload": {
         "psr-4": {
