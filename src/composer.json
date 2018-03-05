@@ -1,0 +1,16 @@
+{
+    "require": {
+        "nikic/fast-route": "^1.0",
+
+            "ext-curl": "*",
+            "ext-mbstring": "*",
+            "twig/twig": "^1.24",
+        "apix/cache": "1.2.*"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "cmal\\":"classes/"
+        }
+    }
+}
