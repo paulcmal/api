@@ -1,7 +1,7 @@
 <?php
 namespace cmal\Api;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use \FastRoute;
 use \cmal\Api\Api;
