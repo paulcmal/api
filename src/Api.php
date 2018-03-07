@@ -29,8 +29,8 @@ class Api {
 		//var_dump($params['args']);
 
         if (array_key_exists($backend, $this->backends)) {
-            call_user_func([$this->backends[$backend], 'dispatch'], $params['args']);
-            //$this->backends[$backend]->dispatch($params['args']);
+            // we assume the backend passed is a callable
+            call_user_func($this->backends[$backend], $params['args']);
         } else {
             die('Backend not found.');
         }
