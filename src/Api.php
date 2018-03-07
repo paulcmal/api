@@ -25,12 +25,15 @@ class Api {
 		// We stripped the leading '/' to match the route in __construct
 		// So now we need to put it back in place
 		$params['args'] = '/' . (empty($params['args']) ? '' : $params['args']);
-		
-		//var_dump($params['args']);
 
         if (array_key_exists($backend, $this->backends)) {
-            // we assume the backend passed is a callable
-            call_user_func($this->backends[$backend], $params['args']);
+            // Check if the backend is a specific method or a class
+            if (is_callable($this->backends[$backend])) {
+                call_user_func($this->backends[$backend], $params['args']);
+            } else {
+                // If we don't know about the method to call, call the 'dispatch' method
+                call_user_func([$this->backends[$backend], 'dispatch'], $params['args']);
+            }
         } else {
             die('Backend not found.');
         }
