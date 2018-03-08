@@ -2,10 +2,15 @@
 
 namespace cmal\Api;
 
+use \cmal\Api\Exception\BaseRouteMatched;
+use \cmal\Api\Exception\NoRouteMatched;
+
 class Backend {
     function dispatch($args, $routes) {
-		new Router($routes, $args);
+        try {
+		    new Router($routes, $args);
+		} catch (BaseRouteMatched $e) {
+		    throw new NoRouteMatched();
+		}
     }
 }
-
-?>

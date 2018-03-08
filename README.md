@@ -83,6 +83,7 @@ new Api([
 - [ ] Clean ugly code
 - [ ] Custom error handling (stop using die)
 - [ ] URL param for Api for nested subroutes
+- [ ] Write tests otherwise it's gonna get messy
 
 ## License
 
