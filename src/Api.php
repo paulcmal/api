@@ -4,6 +4,7 @@ namespace cmal\Api;
 use \cmal\Api\Router;
 use \cmal\Api\Exception\BaseRouteMatched;
 use \cmal\Api\Exception\NoRouteMatched;
+use \cmal\Api\Exception\NoSuchBackend;
 
 class Api {
     
@@ -51,29 +52,25 @@ class Api {
     
     function callBackendIfExists( $backend, $params = NULL) {
         if (!array_key_exists ($backend, $this->backends)) {
-            throw new NoRouteMatched();
+            throw new NoSuchBackend();
         }
         
         $this->toCallable( $this->backends[$backend], $params );
     }
     
     function callBackend ( $backend, $params = NULL ) {
-        try {
-            $this->callBackendIfExists( $backend, $params);
-        } catch (NoRouteMatched $e){
-            throw $e;
-        }
+        $this->callBackendIfExists( $backend, $params);
     }
     
     function callBackendOrDefault ( $backend, $params = NULL) {
         try {
             $this->callBackend( $backend, $params);
-        } catch (NoRouteMatched $e) {
-            try {
-                $this->callBackend( '@', $params);
-            } catch (NoRouteMatched $e) {
-                throw $e;
-            }
+        } catch (BaseRouteMatched $e) {
+            // If base route within backend didn't match, we want NoRouteMatched
+            throw new NoRouteMatched();
+        } catch (NoSuchBackend $e) {
+            // If no backend matched, we want to try then default backend
+            $this->callBackend( '@', $params);
         }
     }
 
@@ -84,11 +81,7 @@ class Api {
 		// So now we need to put it back in place
 		$params['args'] = '/' . (empty($params['args']) ? '' : $params['args']);
 
-        try {
-            $this->callBackendOrDefault( $backend, $params['args'] );
-        } catch (NoRouteMatched $e) {
-            throw $e;
-        }
+        $this->callBackendOrDefault( $backend, $params['args'] );
     }
 }
 
