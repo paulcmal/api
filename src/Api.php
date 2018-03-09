@@ -29,7 +29,7 @@ class Api {
             // Router matched '/'. Check for index backend, then default backend,
             // or raise a BaseRouteMatched Exception
             try {
-		        $this->callBackendOrDefault('/');
+		        $this->callBackendOrDefault('/', '/');
 		    } catch (NoRouteMatched $f) {
 		        throw $e;
 		    }
@@ -70,13 +70,15 @@ class Api {
             throw new NoRouteMatched();
         } catch (NoSuchBackend $e) {
             // If no backend matched, we want to try then default backend
+            // But we need to give it back info about the 'backend' part of the URL
+            if ($backend != '/') { $params = '/' . $backend . $params; }
             $this->callBackend( '@', $params);
         }
     }
 
     function process($params) {
         $backend = $params['backend'];
-		
+        
 		// We stripped the leading '/' to match the route in __construct
 		// So now we need to put it back in place
 		$params['args'] = '/' . (empty($params['args']) ? '' : $params['args']);
@@ -84,5 +86,3 @@ class Api {
         $this->callBackendOrDefault( $backend, $params['args'] );
     }
 }
-
-?>
